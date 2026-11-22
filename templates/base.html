@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}سیستم مدیریت خدمات اینترنتی{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Vazirmatn, Tahoma, sans-serif; background: #f4f6fb; color: #2c3e50; }
+    .navbar { background: #1e3a5f; color: #fff; padding: 0 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .navbar .brand { font-weight: 800; font-size: 1.05rem; padding: 14px 0; margin-left: 16px; white-space: nowrap; }
+    .navbar a { color: #cddcf0; text-decoration: none; padding: 16px 10px; font-size: .92rem; }
+    .navbar a:hover, .navbar a.active { color: #fff; border-bottom: 3px solid #4fc3f7; }
+    .navbar .spacer { flex: 1; }
+    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .card .num { font-size: 1.7rem; font-weight: 800; color: #1e3a5f; }
+    .card .lbl { color: #7f8c9b; font-size: .85rem; margin-top: 4px; }
+    h2 { margin: 20px 0 12px; font-size: 1.15rem; color: #1e3a5f; }
+    table { width: 100%; background: #fff; border-radius: 12px; border-collapse: collapse; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    th, td { padding: 10px 14px; text-align: right; font-size: .9rem; border-bottom: 1px solid #eef1f6; }
+    th { background: #eef2f8; color: #1e3a5f; font-weight: 700; }
+    tr:last-child td { border-bottom: none; }
+    a.link { color: #1976d2; text-decoration: none; }
+    a.link:hover { text-decoration: underline; }
+    .btn { display: inline-block; background: #1e3a5f; color: #fff; padding: 8px 18px; border-radius: 8px; text-decoration: none; border: none; font-family: inherit; font-size: .9rem; cursor: pointer; }
+    .btn.green { background: #2e7d32; }
+    .btn.red { background: #c62828; }
+    .btn.small { padding: 5px 12px; font-size: .82rem; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+    .badge.ok { background: #e8f5e9; color: #2e7d32; }
+    .badge.warn { background: #fff3e0; color: #e65100; }
+    .badge.bad { background: #ffebee; color: #c62828; }
+    .badge.info { background: #e3f2fd; color: #1565c0; }
+    .messages { max-width: 1100px; margin: 16px auto 0; padding: 0 16px; }
+    .msg { background: #e8f5e9; color: #2e7d32; padding: 10px 16px; border-radius: 8px; margin-bottom: 6px; font-size: .9rem; }
+    .btn-bar { margin: 16px 0; display: flex; gap: 10px; }
+    form { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    label { display: block; font-size: .85rem; color: #546e7a; margin: 14px 0 4px; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 9px 12px; border: 1px solid #cfD8e3; border-radius: 8px; font-family: inherit; font-size: .92rem; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #4fc3f7; border-color: #4fc3f7; }
+    .helptext { font-size: .75rem; color: #90a4ae; margin-top: 3px; }
+    .errorlist { color: #c62828; font-size: .82rem; margin-top: 4px; }
+    .empty { padding: 24px; text-align: center; color: #90a4ae; background: #fff; border-radius: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+    .filters { display: flex; gap: 8px; margin-bottom: 12px; }
+    .filters a { padding: 6px 14px; background: #fff; border-radius: 8px; color: #546e7a; text-decoration: none; font-size: .85rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .filters a.on { background: #1e3a5f; color: #fff; }
+    @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <nav class="navbar">
+    <span class="brand">🌐 سیستم مدیریت خدمات اینترنتی</span>
+    <a href="{% url 'dashboard:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">داشبورد</a>
+    <a href="{% url 'customer_list' %}" class="{% if 'customer' in request.path %}active{% endif %}">مشتریان</a>
+    <a href="{% url 'plan_list' %}" class="{% if 'plan' in request.path %}active{% endif %}">پلن‌ها</a>
+    <a href="{% url 'order_list' %}" class="{% if 'order' in request.path %}active{% endif %}">سرویس‌ها</a>
+    <a href="{% url 'invoices:list' %}" class="{% if 'invoice' in request.path %}active{% endif %}">فاکتورها</a>
+    <a href="{% url 'dashboard:reports' %}" class="{% if 'reports' in request.path %}active{% endif %}">گزارش‌ها</a>
+    {% if user.is_superuser %}<a href="{% url 'accounts:users' %}" class="{% if 'users' in request.path %}active{% endif %}">کاربران</a>{% endif %}
+    <span class="spacer"></span>
+    <a href="{% url 'admin:index' %}">پنل مدیریت</a>
+    <a href="{% url 'accounts:logout' %}">خروج ({{ user.username }})</a>
+  </nav>
+  {% endif %}
+  {% if messages %}
+  <div class="messages">{% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}</div>
+  {% endif %}
+  <div class="container">{% block content %}{% endblock %}</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="btn-bar"><a class="btn" href="{% url 'order_create' %}">+ ثبت سرویس جدید</a></div>
+<h2>🖥 سرویس‌ها</h2>
+<div class="filters">
+  <a href="{% url 'order_list' %}" class="{% if not status %}on{% endif %}">همه</a>
+  <a href="?status=active" class="{% if status == 'active' %}on{% endif %}">فعال</a>
+  <a href="?status=expired" class="{% if status == 'expired' %}on{% endif %}">منقضی</a>
+  <a href="?status=cancelled" class="{% if status == 'cancelled' %}on{% endif %}">لغو شده</a>
+</div>
+{% if orders %}
+<table>
+  <tr><th>مشتری</th><th>پلن</th><th>شروع</th><th>پایان</th><th>وضعیت</th><th></th></tr>
+  {% for o in orders %}
+  <tr>
+    <td><a class="link" href="{% url 'customer_detail' o.customer.pk %}">{{ o.customer }}</a></td>
+    <td>{{ o.plan }}</td>
+    <td>{{ o.start_date }}</td>
+    <td>{{ o.end_date }}</td>
+    <td><span class="badge {% if o.status == 'active' %}{% if o.is_expiring_soon %}warn{% else %}ok{% endif %}{% elif o.status == 'expired' %}bad{% else %}info{% endif %}">{{ o.get_status_display }}</span></td>
+    <td>{% if o.status == 'active' %}<a class="btn small green" href="{% url 'order_renew' o.pk %}">تمدید</a>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">سرویسی ثبت نشده است.</div>
+{% endif %}
+{% endblock %}

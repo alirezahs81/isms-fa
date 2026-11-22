@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}گزارش‌ها{% endblock %}
+{% block content %}
+<h2>📊 گزارش‌ها و آمار</h2>
+<div class="cards">
+  <div class="card"><div class="num">{{ total_income }} <small>تومان</small></div><div class="lbl">درآمد کل</div></div>
+  <div class="card"><div class="num">{{ unpaid_total }} <small>تومان</small></div><div class="lbl">مطالبات (پرداخت‌نشده)</div></div>
+  <div class="card"><div class="num">{{ active_orders }}</div><div class="lbl">سرویس فعال</div></div>
+  <div class="card"><div class="num">{{ expired_orders }}</div><div class="lbl">سرویس منقضی</div></div>
+</div>
+
+<h2>درآمد ماهانه</h2>
+{% if income_by_month %}
+<table>
+  <tr><th>ماه</th><th>مبلغ</th></tr>
+  {% for month, amount in income_by_month %}
+  <tr><td>{{ month }}</td><td>{{ amount }} تومان</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">هنوز پرداختی ثبت نشده است.</div>
+{% endif %}
+
+<h2>توزیع سرویس‌ها بر اساس دسته‌بندی</h2>
+{% if by_category %}
+<table>
+  <tr><th>دسته</th><th>تعداد</th></tr>
+  {% for cat, count in by_category.items %}
+  <tr><td>{{ cat }}</td><td>{{ count }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">هنوز سرویسی ثبت نشده است.</div>
+{% endif %}
+{% endblock %}

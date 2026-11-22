@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="btn-bar">{% if btn_url %}<a class="btn" href="{{ btn_url }}">{{ btn_label }}</a>{% endif %}</div>
+<h2>{{ title }}</h2>
+{% if customers %}
+<table>
+  <tr><th>نام</th><th>موبایل</th><th>شرکت</th><th></th></tr>
+  {% for c in customers %}
+  <tr>
+    <td><a class="link" href="{% url 'customer_detail' c.pk %}">{{ c.full_name }}</a></td>
+    <td>{{ c.phone }}</td>
+    <td>{{ c.company|default:'—' }}</td>
+    <td><a class="btn small" href="{% url 'customer_edit' c.pk %}">ویرایش</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">مشتری‌ای ثبت نشده است.</div>
+{% endif %}
+{% endblock %}

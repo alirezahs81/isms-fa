@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}داشبورد — سیستم مدیریت خدمات اینترنتی{% endblock %}
+{% block content %}
+<h2>داشبورد</h2>
+<div class="cards">
+  <div class="card"><div class="num">{{ customer_count }}</div><div class="lbl">مشتری</div></div>
+  <div class="card"><div class="num">{{ active_count }}</div><div class="lbl">سرویس فعال</div></div>
+  <div class="card"><div class="num">{{ plan_count }}</div><div class="lbl">پلن فعال</div></div>
+  <div class="card"><div class="num">{{ month_income }} <small>تومان</small></div><div class="lbl">درآمد این ماه</div></div>
+</div>
+
+<h2>⏰ یادآور تمدید — سرویس‌های نزدیک به انقضا (۱۴ روز آینده)</h2>
+{% if expiring_orders %}
+<table>
+  <tr><th>مشتری</th><th>پلن</th><th>تاریخ پایان</th><th>روز باقی‌مانده</th><th></th></tr>
+  {% for o in expiring_orders %}
+  <tr>
+    <td><a class="link" href="{% url 'customer_detail' o.customer.pk %}">{{ o.customer }}</a></td>
+    <td>{{ o.plan }}</td>
+    <td>{{ o.end_date }}</td>
+    <td>{% if o.days_remaining < 0 %}<span class="badge bad">منقضی</span>{% elif o.days_remaining <= 3 %}<span class="badge bad">{{ o.days_remaining }} روز</span>{% else %}<span class="badge warn">{{ o.days_remaining }} روز</span>{% endif %}</td>
+    <td><a class="btn small green" href="{% url 'order_renew' o.pk %}">تمدید</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">هیچ سرویسی در ۱۴ روز آینده منقضی نمی‌شود ✅</div>
+{% endif %}
+
+<h2>💰 فاکتورهای پرداخت‌نشده</h2>
+{% if unpaid_invoices %}
+<table>
+  <tr><th>شماره</th><th>مشتری</th><th>پلن</th><th>مبلغ</th><th>سررسید</th></tr>
+  {% for inv in unpaid_invoices %}
+  <tr>
+    <td><a class="link" href="{% url 'invoices:detail' inv.pk %}">{{ inv.invoice_number }}</a></td>
+    <td>{{ inv.customer }}</td>
+    <td>{{ inv.plan }}</td>
+    <td>{{ inv.total }} تومان</td>
+    <td>{{ inv.due_date }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">فاکتور پرداخت‌نشده‌ای وجود ندارد ✅</div>
+{% endif %}
+{% endblock %}

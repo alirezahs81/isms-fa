@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="btn-bar"><a class="btn" href="{% url 'plan_create' %}">+ پلن جدید</a></div>
+<h2>📦 پلن‌های سرویس</h2>
+{% if plans %}
+<table>
+  <tr><th>نام</th><th>دسته</th><th>مدت</th><th>قیمت</th><th>مشخصات</th><th>وضعیت</th></tr>
+  {% for p in plans %}
+  <tr>
+    <td>{{ p.name }}</td>
+    <td><span class="badge info">{{ p.get_category_display }}</span></td>
+    <td>{{ p.get_duration_months_display }}</td>
+    <td>{{ p.price }} تومان</td>
+    <td>{{ p.specs|default:'—' }}</td>
+    <td><span class="badge {% if p.is_active %}ok{% else %}bad{% endif %}">{% if p.is_active %}فعال{% else %}غیرفعال{% endif %}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">پلنی ثبت نشده است.</div>
+{% endif %}
+{% endblock %}

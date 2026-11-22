@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🧾 فاکتور {{ invoice.invoice_number }}</h2>
+<div class="card">
+  <p><b>مشتری:</b> <a class="link" href="{% url 'customer_detail' invoice.customer.pk %}">{{ invoice.customer }}</a></p>
+  <p><b>پلن:</b> {{ invoice.plan }}</p>
+  <p><b>مبلغ:</b> {{ invoice.amount }} تومان {% if invoice.discount %}— <b>تخفیف:</b> {{ invoice.discount }} تومان{% endif %}</p>
+  <p><b>مبلغ نهایی:</b> {{ invoice.total }} تومان</p>
+  <p><b>تاریخ صدور:</b> {{ invoice.issue_date }} — <b>سررسید:</b> {{ invoice.due_date }}</p>
+  <p><b>وضعیت:</b> <span class="badge {% if invoice.status == 'paid' %}ok{% elif invoice.status == 'unpaid' %}warn{% else %}info{% endif %}">{{ invoice.get_status_display }}</span></p>
+</div>
+
+<div class="btn-bar">
+  {% if invoice.status == 'unpaid' %}<a class="btn red" href="{% url 'invoices:cancel' invoice.pk %}">ابطال فاکتور</a>{% endif %}
+</div>
+
+<h2>ثبت پرداخت</h2>
+{% if invoice.status != 'cancelled' %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div style="margin-top:16px"><button type="submit" class="btn green">ثبت پرداخت</button></div>
+</form>
+{% endif %}
+
+<h2>پرداخت‌های ثبت‌شده</h2>
+{% if payments %}
+<table>
+  <tr><th>مبلغ</th><th>روش</th><th>تاریخ</th><th>مرجع</th></tr>
+  {% for p in payments %}
+  <tr><td>{{ p.amount }} تومان</td><td>{{ p.get_method_display }}</td><td>{{ p.paid_at }}</td><td>{{ p.reference|default:'—' }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">پرداختی ثبت نشده است.</div>
+{% endif %}
+{% endblock %}

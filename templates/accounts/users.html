@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="btn-bar"><a class="btn" href="{% url 'accounts:user_create' %}">+ کاربر جدید</a></div>
+<h2>👥 کاربران سیستم</h2>
+<table>
+  <tr><th>نام کاربری</th><th>نام کامل</th><th>ایمیل</th><th>نقش</th></tr>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.username }}</td>
+    <td>{{ u.get_full_name|default:'—' }}</td>
+    <td>{{ u.email|default:'—' }}</td>
+    <td><span class="badge {% if u.is_superuser %}bad{% elif u.is_staff %}ok{% endif %}">{% if u.is_superuser %}مدیر سیستم{% elif u.is_staff %}کارمند{% else %}معمولی{% endif %}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}ورود{% endblock %}
+{% block content %}
+<div style="max-width:400px;margin:60px auto">
+  <h2 style="text-align:center">🔐 ورود به سیستم مدیریت خدمات اینترنتی</h2>
+  {% if form.errors %}
+  <div class="msg" style="background:#ffebee;color:#c62828">نام کاربری یا رمز عبور اشتباه است.</div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <label>نام کاربری</label>
+    <input type="text" name="username" required autofocus>
+    <label>رمز عبور</label>
+    <input type="password" name="password" required>
+    <div style="margin-top:20px"><button type="submit" class="btn" style="width:100%">ورود</button></div>
+  </form>
+</div>
+{% endblock %}

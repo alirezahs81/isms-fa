@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div style="margin-top:20px"><button type="submit" class="btn green">ذخیره</button> <a class="btn" style="background:#90a4ae" href="javascript:history.back()">بازگشت</a></div>
+</form>
+{% endblock %}
