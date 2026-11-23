@@ -48,7 +48,7 @@ def invoice_detail(request, pk):
     invoice = get_object_or_404(Invoice.objects.select_related('customer', 'plan'), pk=pk)
     paid = sum(p.amount for p in invoice.payments.all())
     if request.method == 'POST':
-        form = PaymentForm(request.POST)
+        form = PaymentForm(request.POST, instance=Payment(invoice=invoice, recorded_by=request.user))
         if form.is_valid():
             payment = form.save(commit=False)
             payment.invoice = invoice
@@ -57,7 +57,7 @@ def invoice_detail(request, pk):
             messages.success(request, 'پرداخت ثبت شد.')
             return redirect('invoice_detail', pk=pk)
     else:
-        form = PaymentForm(initial={'amount': max(invoice.total - paid, 0)})
+        form = PaymentForm(instance=Payment(invoice=invoice), initial={'amount': max(invoice.total - paid, 0)})
     return render(request, 'invoices/detail.html', {
         'invoice': invoice, 'paid': paid, 'remaining': invoice.total - paid,
         'payments': invoice.payments.all(), 'form': form,
