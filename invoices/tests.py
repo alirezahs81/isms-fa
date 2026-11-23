@@ -67,3 +67,18 @@ class FinancialValidationTests(TestCase):
         Payment.objects.create(invoice=self.invoice, amount=Decimal("900"), recorded_by=self.user)
         self.invoice.refresh_from_db()
         self.assertEqual(self.invoice.status, "paid")
+
+
+class PaymentDeletionConsistencyTests(TestCase):
+    def test_deleting_payment_recalculates_invoice_status(self):
+        user = get_user_model().objects.create_user(username='payment-delete-test')
+        customer = Customer.objects.create(full_name='Delete Test Customer', phone='09120000001')
+        plan = ServicePlan.objects.create(name='Delete Test Plan', category='internet', price=Decimal('500'))
+        invoice = Invoice.objects.create(customer=customer, plan=plan, amount=Decimal('500'), created_by=user)
+        payment = Payment.objects.create(invoice=invoice, amount=Decimal('500'), recorded_by=user)
+        invoice.refresh_from_db()
+        self.assertEqual(invoice.status, 'paid')
+
+        payment.delete()
+        invoice.refresh_from_db()
+        self.assertEqual(invoice.status, 'unpaid')
