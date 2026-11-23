@@ -28,7 +28,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-@staff_member_required
+@role_required('admin', 'finance')
 def reports(request):
     today = timezone.localdate()
     income_by_month = {}
