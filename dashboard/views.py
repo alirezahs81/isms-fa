@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
@@ -9,10 +9,10 @@ from invoices.models import Invoice, Payment
 
 def staff_required(view):
     """دسترسی فقط برای کارکنان (ادمین/کارمند)"""
-    return login_required(view)
+    return staff_member_required(view)
 
 
-@login_required
+@staff_member_required
 def dashboard(request):
     today = timezone.localdate()
     soon = today + timedelta(days=14)
@@ -33,7 +33,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-@login_required
+@staff_member_required
 def reports(request):
     today = timezone.localdate()
     income_by_month = {}
