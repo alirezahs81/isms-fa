@@ -9,7 +9,7 @@ from invoices.models import Invoice, Payment
 
 def staff_required(view):
     """دسترسی فقط برای کارکنان (ادمین/کارمند)"""
-    return login_required(view)
+    return staff_member_required(view)
 
 
 @staff_member_required
@@ -33,7 +33,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-@login_required
+@staff_member_required
 def reports(request):
     today = timezone.localdate()
     income_by_month = {}
