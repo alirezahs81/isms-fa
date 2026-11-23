@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
@@ -13,6 +14,7 @@ class InvoiceMutationSecurityTests(TestCase):
     def setUp(self):
         User = get_user_model()
         self.staff = User.objects.create_user(username="invoice-staff-test", password="test-password", is_staff=True)
+        self.staff.groups.add(Group.objects.create(name='isms_finance'))
         self.client.force_login(self.staff)
 
     def test_invoice_cancel_rejects_get(self):
