@@ -18,7 +18,7 @@
     <td>{{ o.start_date }}</td>
     <td>{{ o.end_date }}</td>
     <td><span class="badge {% if o.status == 'active' %}{% if o.is_expiring_soon %}warn{% else %}ok{% endif %}{% elif o.status == 'expired' %}bad{% else %}info{% endif %}">{{ o.get_status_display }}</span></td>
-    <td>{% if o.status == 'active' %}<a class="btn small green" href="{% url 'order_renew' o.pk %}">تمدید</a>{% endif %}</td>
+    <td>{% if o.status == 'active' %}<form method="post" action="{% url 'order_renew' o.pk %}" style="display:inline">{% csrf_token %}<button class="btn small green" type="submit">تمدید</button></form>{% endif %}</td>
   </tr>
   {% endfor %}
 </table>
