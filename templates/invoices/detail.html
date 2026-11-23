@@ -11,7 +11,7 @@
 </div>
 
 <div class="btn-bar">
-  {% if invoice.status == 'unpaid' %}<a class="btn red" href="{% url 'invoices:cancel' invoice.pk %}">ابطال فاکتور</a>{% endif %}
+  {% if invoice.status == 'unpaid' %}<form method="post" action="{% url 'invoices:cancel' invoice.pk %}" style="display:inline">{% csrf_token %}<button class="btn red" type="submit">ابطال فاکتور</button></form>{% endif %}
 </div>
 
 <h2>ثبت پرداخت</h2>
