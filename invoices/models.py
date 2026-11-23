@@ -1,6 +1,9 @@
-from django.db import models
-from django.utils import timezone
 from decimal import Decimal
+
+from django.core.exceptions import ValidationError
+from django.db import models, transaction, connection
+from django.utils import timezone
+
 from services.models import Customer, ServicePlan
 
 
@@ -30,12 +33,39 @@ class Invoice(models.Model):
         verbose_name_plural = 'فاکتورها'
         ordering = ['-issue_date', '-id']
 
+    def clean(self):
+        super().clean()
+        errors = {}
+        if self.amount is not None and self.amount <= 0:
+            errors['amount'] = 'مبلغ فاکتور باید بیشتر از صفر باشد.'
+        if self.discount is not None and self.discount < 0:
+            errors['discount'] = 'تخفیف نمی‌تواند منفی باشد.'
+        if self.amount is not None and self.discount is not None and self.discount > self.amount:
+            errors['discount'] = 'تخفیف نمی‌تواند از مبلغ فاکتور بیشتر باشد.'
+        if errors:
+            raise ValidationError(errors)
+
     def save(self, *args, **kwargs):
         if not self.invoice_number:
-            year = timezone.localdate().strftime('%Y')
-            last = Invoice.objects.filter(invoice_number__startswith=f'INV-{year}').count()
-            self.invoice_number = f'INV-{year}-{last + 1:04d}'
-        super().save(*args, **kwargs)
+            with transaction.atomic():
+                # Serialize invoice number allocation on PostgreSQL.
+                if connection.vendor == 'postgresql':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT pg_advisory_xact_lock(%s)", [731904221])
+                year = timezone.localdate().strftime('%Y')
+                prefix = f'INV-{year}-'
+                last_number = 0
+                last = Invoice.objects.filter(invoice_number__startswith=prefix).order_by('-invoice_number').first()
+                if last:
+                    try:
+                        last_number = int(last.invoice_number.rsplit('-', 1)[1])
+                    except (IndexError, ValueError):
+                        raise ValidationError({'invoice_number': 'شماره فاکتور قبلی نامعتبر است.'})
+                self.invoice_number = f'{prefix}{last_number + 1:04d}'
+                self.full_clean()
+                return super().save(*args, **kwargs)
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     @property
     def total(self):
@@ -69,11 +99,32 @@ class Payment(models.Model):
         verbose_name_plural = 'پرداخت‌ها'
         ordering = ['-paid_at']
 
+    def clean(self):
+        super().clean()
+        errors = {}
+        if self.amount is not None and self.amount <= 0:
+            errors['amount'] = 'مبلغ پرداخت باید بیشتر از صفر باشد.'
+        if self.invoice_id and self.amount is not None:
+            invoice = self.invoice
+            paid = invoice.payments.exclude(pk=self.pk).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+            if invoice.status == 'cancelled':
+                errors['invoice'] = 'ثبت پرداخت برای فاکتور ابطال‌شده مجاز نیست.'
+            elif self.amount > invoice.total - paid:
+                errors['amount'] = 'مبلغ پرداخت از مانده فاکتور بیشتر است.'
+        if errors:
+            raise ValidationError(errors)
+
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        paid_sum = self.invoice.payments.aggregate(s=models.Sum('amount'))['s'] or Decimal('0')
-        if paid_sum >= self.invoice.total:
-            Invoice.objects.filter(pk=self.invoice.pk).exclude(status='paid').update(status='paid')
+        with transaction.atomic():
+            invoice = Invoice.objects.select_for_update().get(pk=self.invoice_id)
+            self.invoice = invoice
+            self.full_clean()
+            result = super().save(*args, **kwargs)
+            paid_sum = invoice.payments.aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+            new_status = 'paid' if paid_sum >= invoice.total else 'unpaid'
+            if invoice.status != 'cancelled' and invoice.status != new_status:
+                Invoice.objects.filter(pk=invoice.pk).update(status=new_status)
+            return result
 
     def __str__(self):
         return f'{self.invoice.invoice_number} — {self.amount}'
