@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django import forms
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -33,7 +34,7 @@ class PaymentForm(forms.ModelForm):
         }
 
 
-@login_required
+@staff_member_required
 def invoice_list(request):
     invoices = Invoice.objects.select_related('customer', 'plan')
     status = request.GET.get('status')
