@@ -15,7 +15,7 @@ class DashboardAccessTests(TestCase):
         self.client.force_login(user)
         for url in (reverse('dashboard:home'), reverse('dashboard:reports')):
             with self.subTest(url=url):
-                self.assertEqual(self.client.get(url).status_code, 302)
+                self.assertEqual(self.client.get(url).status_code, 403)
 
     def test_staff_user_can_view_dashboard_and_reports(self):
         user = get_user_model().objects.create_user(username='staff-dashboard-test', password='Strong-Test-Password-928!', is_staff=True)
