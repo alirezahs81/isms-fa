@@ -17,6 +17,11 @@ class StaffMutationSecurityTests(TestCase):
         response = self.client.get(reverse("order_renew", args=[1]))
         self.assertEqual(response.status_code, 405)
 
+
+    def test_support_cannot_view_financial_records(self):
+        response = self.client.get(reverse("invoices:list"))
+        self.assertEqual(response.status_code, 403)
+
     def test_non_staff_cannot_create_customer(self):
         User = get_user_model()
         regular_user = User.objects.create_user(
