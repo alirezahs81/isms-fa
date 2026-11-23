@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django import forms
-from django.contrib.admin.views.decorators import staff_member_required
+from accounts.permissions import role_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -34,7 +34,7 @@ class PaymentForm(forms.ModelForm):
         }
 
 
-@staff_member_required
+@role_required('finance', 'admin')
 def invoice_list(request):
     invoices = Invoice.objects.select_related('customer', 'plan')
     status = request.GET.get('status')
@@ -43,7 +43,7 @@ def invoice_list(request):
     return render(request, 'invoices/list.html', {'invoices': invoices, 'status': status})
 
 
-@staff_member_required
+@role_required('finance', 'admin')
 def invoice_detail(request, pk):
     invoice = get_object_or_404(Invoice.objects.select_related('customer', 'plan'), pk=pk)
     paid = sum(p.amount for p in invoice.payments.all())
@@ -64,7 +64,7 @@ def invoice_detail(request, pk):
     })
 
 
-@staff_member_required
+@role_required('finance', 'admin')
 def invoice_create(request):
     if request.method == 'POST':
         form = InvoiceForm(request.POST)
@@ -81,7 +81,7 @@ def invoice_create(request):
     return render(request, 'form.html', {'form': form, 'title': 'صدور فاکتور جدید'})
 
 
-@staff_member_required
+@role_required('admin')
 @require_POST
 def invoice_cancel(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
@@ -91,7 +91,7 @@ def invoice_cancel(request, pk):
     return redirect('invoice_detail', pk=pk)
 
 
-@staff_member_required
+@role_required('finance', 'admin')
 @require_POST
 def invoice_from_order(request, order_pk):
     """صدور خودکار فاکتور برای یک سرویس"""
