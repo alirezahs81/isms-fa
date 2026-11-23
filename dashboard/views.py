@@ -7,11 +7,6 @@ from services.models import Customer, ServicePlan, ServiceOrder
 from invoices.models import Invoice, Payment
 
 
-def staff_required(view):
-    """دسترسی فقط برای کارکنان (ادمین/کارمند)"""
-    return staff_member_required(view)
-
-
 @role_required('admin', 'finance')
 def dashboard(request):
     today = timezone.localdate()
