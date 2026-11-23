@@ -126,5 +126,15 @@ class Payment(models.Model):
                 Invoice.objects.filter(pk=invoice.pk).update(status=new_status)
             return result
 
+    def delete(self, *args, **kwargs):
+        with transaction.atomic():
+            invoice = Invoice.objects.select_for_update().get(pk=self.invoice_id)
+            result = super().delete(*args, **kwargs)
+            paid_sum = invoice.payments.aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+            new_status = 'paid' if paid_sum >= invoice.total else 'unpaid'
+            if invoice.status != 'cancelled' and invoice.status != new_status:
+                Invoice.objects.filter(pk=invoice.pk).update(status=new_status)
+            return result
+
     def __str__(self):
         return f'{self.invoice.invoice_number} — {self.amount}'
