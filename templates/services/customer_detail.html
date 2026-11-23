@@ -3,7 +3,7 @@
 {% block content %}
 <div class="btn-bar">
   <a class="btn" href="{% url 'customer_edit' customer.pk %}">ویرایش مشتری</a>
-  <a class="btn green" href="{% url 'invoices:create' %}">صدور فاکتور</a>
+  {% if can_view_financial %}<a class="btn green" href="{% url 'invoices:create' %}">صدور فاکتور</a>{% endif %}
 </div>
 <h2>👤 {{ customer.full_name }}</h2>
 <div class="card">
@@ -24,8 +24,8 @@
     <td>{{ o.end_date }}</td>
     <td><span class="badge {% if o.status == 'active' %}{% if o.is_expiring_soon %}warn{% else %}ok{% endif %}{% elif o.status == 'expired' %}bad{% else %}info{% endif %}">{{ o.get_status_display }}</span></td>
     <td>
-      {% if o.status == 'active' %}<a class="btn small green" href="{% url 'order_renew' o.pk %}">تمدید</a>{% endif %}
-      <a class="btn small" href="{% url 'invoices:from_order' o.pk %}">صدور فاکتور تمدید</a>
+      {% if o.status == 'active' %}<form method="post" action="{% url 'order_renew' o.pk %}" style="display:inline">{% csrf_token %}<button class="btn small green" type="submit">تمدید</button></form>{% endif %}
+      {% if can_view_financial %}<form method="post" action="{% url 'invoices:from_order' o.pk %}" style="display:inline">{% csrf_token %}<button class="btn small" type="submit">صدور فاکتور تمدید</button></form>{% endif %}
     </td>
   </tr>
   {% endfor %}
@@ -34,6 +34,7 @@
 <div class="empty">سرویسی برای این مشتری ثبت نشده است.</div>
 {% endif %}
 
+{% if can_view_financial %}
 <h2>فاکتورها</h2>
 {% if invoices %}
 <table>
@@ -49,5 +50,6 @@
 </table>
 {% else %}
 <div class="empty">فاکتوری برای این مشتری صادر نشده است.</div>
+{% endif %}
 {% endif %}
 {% endblock %}
