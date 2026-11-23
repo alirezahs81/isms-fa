@@ -50,6 +50,9 @@ jobs:
       - name: Ensure static directory exists
         run: mkdir -p static
 
+      - name: Check for missing migrations
+        run: python manage.py makemigrations --check --dry-run
+
       - name: Run migrations
         run: python manage.py migrate --noinput
 
