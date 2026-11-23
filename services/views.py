@@ -59,6 +59,7 @@ def customer_detail(request, pk):
         'customer': customer,
         'orders': customer.orders.select_related('plan'),
         'invoices': customer.invoices.select_related('plan'),
+        'can_view_financial': request.user.is_superuser or request.user.groups.filter(name__in=['isms_admin', 'isms_finance']).exists(),
     })
 
 
