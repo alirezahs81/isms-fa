@@ -14,7 +14,7 @@ class InvoiceMutationSecurityTests(TestCase):
     def setUp(self):
         User = get_user_model()
         self.staff = User.objects.create_user(username="invoice-staff-test", password="test-password", is_staff=True)
-        self.staff.groups.add(Group.objects.create(name='isms_finance'))
+        self.staff.groups.add(Group.objects.create(name='isms_admin'))
         self.client.force_login(self.staff)
 
     def test_invoice_cancel_rejects_get(self):
