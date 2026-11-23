@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django import forms
@@ -12,12 +13,14 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'is_staff']
         labels = {
-            'username': 'نام کاربری',
-            'first_name': 'نام',
-            'last_name': 'نام خانوادگی',
-            'email': 'ایمیل',
-            'is_staff': 'دسترسی کارمند',
+            'username': 'نام کاربری', 'first_name': 'نام', 'last_name': 'نام خانوادگی',
+            'email': 'ایمیل', 'is_staff': 'دسترسی کارمند',
         }
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        validate_password(password, self.instance)
+        return password
 
 
 def is_admin(user):
