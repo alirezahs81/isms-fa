@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
@@ -12,7 +12,7 @@ def staff_required(view):
     return login_required(view)
 
 
-@login_required
+@staff_member_required
 def dashboard(request):
     today = timezone.localdate()
     soon = today + timedelta(days=14)
