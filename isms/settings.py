@@ -82,11 +82,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('ISMS_DB_NAME', 'isms'),
         'USER': os.environ.get('ISMS_DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('ISMS_DB_PASSWORD', 'postgres'),
+        'PASSWORD': os.environ.get('ISMS_DB_PASSWORD', ''),
         'HOST': os.environ.get('ISMS_DB_HOST', '127.0.0.1'),
         'PORT': os.environ.get('ISMS_DB_PORT', '5432'),
     }
 }
+
+if not DEBUG and not DATABASES['default']['PASSWORD']:
+    raise ImproperlyConfigured('ISMS_DB_PASSWORD must be set when DEBUG is disabled.')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
