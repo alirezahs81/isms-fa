@@ -1,0 +1,199 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ISMS\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Language: fa\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+
+msgid "Internet (ADSL/TD-LTE)"
+msgstr "اینترنت (ADSL/TD-LTE)"
+
+msgid "Hosting/Domain/Server"
+msgstr "هاست/دامنه/سرور"
+
+msgid "Software License"
+msgstr "لایسنس نرم‌افزار"
+
+msgid "Monthly"
+msgstr "ماهانه"
+
+msgid "Quarterly"
+msgstr "سه‌ماهه"
+
+msgid "Semi-annual"
+msgstr "شش‌ماهه"
+
+msgid "Annual"
+msgstr "سالانه"
+
+msgid "Plan name"
+msgstr "نام پلن"
+
+msgid "Category"
+msgstr "دسته‌بندی"
+
+msgid "Duration (months)"
+msgstr "مدت (ماه)"
+
+msgid "Price (Toman)"
+msgstr "قیمت (تومان)"
+
+msgid "Specifications"
+msgstr "مشخصات"
+
+msgid "e.g. 8Mbps, 100GB SSD, license version"
+msgstr "مثلاً: 8Mbps، 100GB SSD، نسخه لایسنس"
+
+msgid "Active"
+msgstr "فعال"
+
+msgid "Created at"
+msgstr "تاریخ ایجاد"
+
+msgid "Service plan"
+msgstr "پلن سرویس"
+
+msgid "Service plans"
+msgstr "پلن‌های سرویس"
+
+msgid "Full name"
+msgstr "نام و نام خانوادگی"
+
+msgid "Phone"
+msgstr "موبایل"
+
+msgid "Email"
+msgstr "ایمیل"
+
+msgid "National ID"
+msgstr "کد ملی"
+
+msgid "Company"
+msgstr "شرکت/سازمان"
+
+msgid "Address"
+msgstr "آدرس"
+
+msgid "Notes"
+msgstr "یادداشت"
+
+msgid "Customer"
+msgstr "مشتری"
+
+msgid "Customers"
+msgstr "مشتریان"
+
+msgid "Expired"
+msgstr "منقضی"
+
+msgid "Cancelled"
+msgstr "لغو شده"
+
+msgid "Plan"
+msgstr "پلن"
+
+msgid "Start date"
+msgstr "تاریخ شروع"
+
+msgid "End date"
+msgstr "تاریخ پایان"
+
+msgid "Status"
+msgstr "وضعیت"
+
+msgid "Account info / username"
+msgstr "اطلاعات حساب/نام کاربری"
+
+msgid "e.g. ADSL username or registered domain"
+msgstr "مثلاً: نام کاربری ADSL یا دامنه ثبت‌شده"
+
+msgid "Service order"
+msgstr "سفارش سرویس"
+
+msgid "Service orders"
+msgstr "سفارش‌های سرویس"
+
+msgid "Unpaid"
+msgstr "پرداخت‌نشده"
+
+msgid "Paid"
+msgstr "پرداخت‌شده"
+
+msgid "Invoice number"
+msgstr "شماره فاکتور"
+
+msgid "Amount (Toman)"
+msgstr "مبلغ (تومان)"
+
+msgid "Discount (Toman)"
+msgstr "تخفیف (تومان)"
+
+msgid "Issue date"
+msgstr "تاریخ صدور"
+
+msgid "Due date"
+msgstr "تاریخ سررسید"
+
+msgid "Related order"
+msgstr "سفارش مرتبط"
+
+msgid "Issued by"
+msgstr "صادرکننده"
+
+msgid "Invoice"
+msgstr "فاکتور"
+
+msgid "Invoices"
+msgstr "فاکتورها"
+
+msgid "Payment method"
+msgstr "روش پرداخت"
+
+msgid "Cash"
+msgstr "نقدی"
+
+msgid "Card transfer"
+msgstr "کارت به کارت"
+
+msgid "Online gateway"
+msgstr "درگاه آنلاین"
+
+msgid "Bank transfer"
+msgstr "انتقال بانکی"
+
+msgid "Paid at"
+msgstr "تاریخ پرداخت"
+
+msgid "Reference number"
+msgstr "شماره پیگیری/مرجع"
+
+msgid "Recorded by"
+msgstr "ثبت‌کننده"
+
+msgid "Payment"
+msgstr "پرداخت"
+
+msgid "Payments"
+msgstr "پرداخت‌ها"
+
+msgid "Invoice amount must be greater than zero."
+msgstr "مبلغ فاکتور باید بیشتر از صفر باشد."
+
+msgid "Discount cannot be negative."
+msgstr "تخفیف نمی‌تواند منفی باشد."
+
+msgid "Discount cannot exceed invoice amount."
+msgstr "تخفیف نمی‌تواند از مبلغ فاکتور بیشتر باشد."
+
+msgid "The previous invoice number is invalid."
+msgstr "شماره فاکتور قبلی نامعتبر است."
+
+msgid "Payment amount must be greater than zero."
+msgstr "مبلغ پرداخت باید بیشتر از صفر باشد."
+
+msgid "Payments cannot be recorded for a cancelled invoice."
+msgstr "ثبت پرداخت برای فاکتور لغو‌شده مجاز نیست."
+
+msgid "Payment amount exceeds the outstanding invoice balance."
+msgstr "مبلغ پرداخت از مانده فاکتور بیشتر است."
